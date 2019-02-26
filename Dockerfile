@@ -23,6 +23,7 @@ RUN apt-get update \
       make \
       libc-dev \
       postgresql-server-dev-$PG_MAJOR \
+      wget \
       unzip \
       ca-certificates \
       openssl \
