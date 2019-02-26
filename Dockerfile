@@ -1,8 +1,3 @@
-# Azurewind's PostgreSQL image with Chinese full text search
-# build: docker build --force-rm -t chenxinaz/zhparser .
-# run: docker run --name PostgreSQLcnFt -p 5432:5432 chenxinaz/zhparser
-# run interactive: winpty docker run -it --name PostgreSQLcnFt -p 5432:5432 chenxinaz/zhparser --entrypoint bash chenxinaz/zhparser
-
 FROM postgres:9.6
 
 ARG CN_MIRROR=0
@@ -28,7 +23,6 @@ RUN apt-get update \
       make \
       libc-dev \
       postgresql-server-dev-$PG_MAJOR \
-      wget \
       unzip \
       ca-certificates \
       openssl \
@@ -42,11 +36,11 @@ RUN apt-get update \
   && cd /zhparser-master \
   && SCWS_HOME=/usr/local make && make install \
   # pg_trgm is recommend but not required.
-  && echo "CREATE EXTENSION pg_trgm; \n\
-CREATE EXTENSION zhparser; \n\
-CREATE TEXT SEARCH CONFIGURATION chinese_zh (PARSER = zhparser); \n\
-ALTER TEXT SEARCH CONFIGURATION chinese_zh ADD MAPPING FOR n,v,a,i,e,l,t WITH simple;" \
-> /docker-entrypoint-initdb.d/init-zhparser.sql \
+#  && echo "CREATE EXTENSION pg_trgm; \n\
+#CREATE EXTENSION zhparser; \n\
+#CREATE TEXT SEARCH CONFIGURATION chinese_zh (PARSER = zhparser); \n\
+#ALTER TEXT SEARCH CONFIGURATION chinese_zh ADD MAPPING FOR n,v,a,i,e,l,t WITH simple;" \
+#> /docker-entrypoint-initdb.d/init-zhparser.sql \
   && apt-get purge -y gcc make libc-dev postgresql-server-dev-$PG_MAJOR \
   && apt-get autoremove -y \
   && rm -rf \
